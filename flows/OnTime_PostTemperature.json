@@ -1,0 +1,149 @@
+[
+  {
+    "id": "ed17a634.12e858",
+    "type": "comment",
+    "z": "e558c39e.1aa74",
+    "name": "About: Current folder",
+    "info": "/home/pi",
+    "x": 366.00001525878906,
+    "y": 220.28570365905762,
+    "wires": []
+  },
+  {
+    "id": "e4c5e36e.1b3a2",
+    "type": "inject",
+    "z": "e558c39e.1aa74",
+    "name": "Click to execute",
+    "topic": "",
+    "payload": "",
+    "payloadType": "none",
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "x": 123.00001525878906,
+    "y": 145.28570365905762,
+    "wires": [
+      [
+        "bd8528e5.427ad8"
+      ]
+    ]
+  },
+  {
+    "id": "bd8528e5.427ad8",
+    "type": "exec",
+    "z": "e558c39e.1aa74",
+    "command": "cat /sys/bus/w1/devices/28-000002df2140/w1_slave",
+    "addpay": true,
+    "append": "",
+    "useSpawn": "",
+    "name": "Action: get temperature",
+    "x": 376.00001525878906,
+    "y": 168.28570365905762,
+    "wires": [
+      [
+        "ec57953e.13a868"
+      ],
+      [],
+      []
+    ]
+  },
+  {
+    "id": "513e525e.aec1ac",
+    "type": "comment",
+    "z": "e558c39e.1aa74",
+    "name": "About: Get temperature",
+    "info": "cd /sys/bus/w1/devices\ncd 28-xxxxxxx (xxxxxx = id)\ncat w1_slave\n\n\nssh version: \nhttps://socomponents.co.uk/raspberry-pi-ds18b20-temperature-sensing/",
+    "x": 373.00001525878906,
+    "y": 119.28570365905762,
+    "wires": []
+  },
+  {
+    "id": "9492b57f.6b6d48",
+    "type": "comment",
+    "z": "e558c39e.1aa74",
+    "name": "About: Output",
+    "info": "Example of output:\n\n--\n6f 01 4b 46 7f ff 01 10 67 : crc=67 YES 6f \n01 4b 46 7f ff 01 10 67 t=22937\n--\n\nt=22937 // temperature is 22.937 °C\n",
+    "x": 616.0000152587891,
+    "y": 116.28570365905762,
+    "wires": []
+  },
+  {
+    "id": "ec57953e.13a868",
+    "type": "function",
+    "z": "e558c39e.1aa74",
+    "name": "Parse: Message to temperature",
+    "func": "var temperature = msg.payload.split('t=')[1];\n// temperature = '23437\\n' \nreturn temperature.substring(0,2);",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 649.0000152587891,
+    "y": 154.28570365905762,
+    "wires": [
+      [
+        "837fd53d.7c8028"
+      ]
+    ]
+  },
+  {
+    "id": "40edc8b7.bf1238",
+    "type": "inject",
+    "z": "e558c39e.1aa74",
+    "name": "Mon-Fri, 7h at 19h",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "0 7-18 * * 1,2,3,4,5",
+    "once": false,
+    "x": 128.00001525878906,
+    "y": 206.28570365905762,
+    "wires": [
+      [
+        "bd8528e5.427ad8"
+      ]
+    ]
+  },
+  {
+    "id": "837fd53d.7c8028",
+    "type": "function",
+    "z": "e558c39e.1aa74",
+    "name": "Create JSON",
+    "func": "var temperature = msg;\nmsg = {};\nmsg.payload = {\n    \"value1\": temperature + ' °C',\n    \"value2\": 'dallas ds18b20'\n}\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 633,
+    "y": 239.28570556640625,
+    "wires": [
+      [
+        "1bcab422.e4354c"
+      ]
+    ]
+  },
+  {
+    "id": "1bcab422.e4354c",
+    "type": "http request",
+    "z": "e558c39e.1aa74",
+    "name": "To IFTTT",
+    "method": "PUT",
+    "ret": "txt",
+    "url": "https://maker.ifttt.com/trigger/rpi_post_temperature/with/key/bFb4ITTo9WTmL6qYWfoqrw",
+    "x": 627,
+    "y": 319.28570556640625,
+    "wires": [
+      [
+        "98ff853a.670078"
+      ]
+    ]
+  },
+  {
+    "id": "98ff853a.670078",
+    "type": "debug",
+    "z": "e558c39e.1aa74",
+    "name": "IFTTT Response",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 798,
+    "y": 319,
+    "wires": []
+  }
+]

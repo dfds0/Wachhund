@@ -1,0 +1,133 @@
+[
+  {
+    "id": "42c13282.bd3ecc",
+    "type": "inject",
+    "z": "54b5b6f0.ab4a48",
+    "name": "Click to execute",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 162,
+    "y": 267,
+    "wires": [
+      [
+        "2cee566.fd311aa"
+      ]
+    ]
+  },
+  {
+    "id": "2cee566.fd311aa",
+    "type": "exec",
+    "z": "54b5b6f0.ab4a48",
+    "command": "omxplayer /home/pi/Music/oi6RGg",
+    "addpay": true,
+    "append": "",
+    "useSpawn": "",
+    "name": "Action: play song",
+    "x": 411,
+    "y": 267,
+    "wires": [
+      [
+        "ed354665.12cab8"
+      ],
+      [],
+      []
+    ]
+  },
+  {
+    "id": "c6e644bf.3919b8",
+    "type": "comment",
+    "z": "54b5b6f0.ab4a48",
+    "name": "About: Play song",
+    "info": "Bird:\nNorthern parula \nAudio:\nhttps://www.audubon.org/sites/default/files/NORPAR_1.typicalsongsnum1_NYle_1.mp3\nTime:\n15 secs",
+    "x": 410,
+    "y": 324,
+    "wires": []
+  },
+  {
+    "id": "ed354665.12cab8",
+    "type": "debug",
+    "z": "54b5b6f0.ab4a48",
+    "name": "Play output",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 627,
+    "y": 254,
+    "wires": []
+  },
+  {
+    "id": "1fdc0479.e023fc",
+    "type": "http in",
+    "z": "54b5b6f0.ab4a48",
+    "name": "On noise detector",
+    "url": "/noisedetector",
+    "method": "get",
+    "swaggerDoc": "",
+    "x": 143,
+    "y": 184,
+    "wires": [
+      [
+        "2cee566.fd311aa",
+        "f96a1546.0695e8",
+        "104fd4b4.efb02b"
+      ]
+    ]
+  },
+  {
+    "id": "f96a1546.0695e8",
+    "type": "http response",
+    "z": "54b5b6f0.ab4a48",
+    "name": "RPI Response",
+    "x": 408,
+    "y": 184,
+    "wires": []
+  },
+  {
+    "id": "104fd4b4.efb02b",
+    "type": "function",
+    "z": "54b5b6f0.ab4a48",
+    "name": "Create JSON",
+    "func": "var ifttt = {};\n\nifttt.payload = {\n    \"value1\": msg.payload\n    // \"value2\": new Date()\n}\n\nreturn ifttt;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 399,
+    "y": 100,
+    "wires": [
+      [
+        "f7c27229.083d9"
+      ]
+    ]
+  },
+  {
+    "id": "f7c27229.083d9",
+    "type": "http request",
+    "z": "54b5b6f0.ab4a48",
+    "name": "To IFTTT (Drive)",
+    "method": "PUT",
+    "ret": "txt",
+    "url": "https://maker.ifttt.com/trigger/rpi_post_noise/with/key/bFb4ITTo9WTmL6qYWfoqrw",
+    "x": 599,
+    "y": 100,
+    "wires": [
+      [
+        "80421473.7fbde8"
+      ]
+    ]
+  },
+  {
+    "id": "80421473.7fbde8",
+    "type": "debug",
+    "z": "54b5b6f0.ab4a48",
+    "name": "IFTTT Response",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 795,
+    "y": 100,
+    "wires": []
+  }
+]

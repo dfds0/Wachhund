@@ -1,0 +1,143 @@
+[
+  {
+    "id": "28c012ce.d73fee",
+    "type": "exec",
+    "z": "997a73ba.66859",
+    "command": "sudo ifconfig",
+    "addpay": true,
+    "append": "",
+    "useSpawn": false,
+    "name": "ifconfig",
+    "x": 257,
+    "y": 153.5,
+    "wires": [
+      [
+        "a72640ba.58d9c",
+        "a11c287c.5ee3d8"
+      ],
+      [],
+      []
+    ]
+  },
+  {
+    "id": "adc4421e.523bc",
+    "type": "inject",
+    "z": "997a73ba.66859",
+    "name": "get ip - eth0",
+    "topic": "ip",
+    "payload": "eth0",
+    "payloadType": "none",
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "x": 104,
+    "y": 153,
+    "wires": [
+      [
+        "28c012ce.d73fee"
+      ]
+    ]
+  },
+  {
+    "id": "a72640ba.58d9c",
+    "type": "function",
+    "z": "997a73ba.66859",
+    "name": "Extract network config",
+    "func": "// This node parses the info from the command \"ifconfig\" \n// and outputs a string such as:\n\n//\"TestRasPi network config for eth0 \n//inet addr: 192.168.0.120 \n//Bcast: 192.168.0.255 \n//Mask: 255.255.255.0\"\n\n// This parsed info can then be passed to whatever service you want it to be sent out on. My favorite is twitter.\n// Function created by Teslafly - Feel free to do anything you want with it.\n\n// user variables\nvar DefaultIP = \"192.168.0.100\"; // Change to whatever ip adress you dont want your system to tweet on.\n\n\n\n// beginning of function\n/////////////////////////////////////////////////////////\n// Initialize variables\nvar input, tokens, inet, bcast, mask;\nvar outString = \"\";// \"TestRasPi network config\"; \n// start message of outstring, change if you want the beginning of your message to be different.\n\n// Parse the entire string by spaces, and put each item into an array called tokens\n\ninput = msg.payload;\ntokens = input.split(\":\", 10);\n\n// Get the 7th token (example: \"addr:192.168.0.120\")\n// and get the substring from character 6 to the end\ninet = tokens[7].split(\" \", 1);\noutString += \"rpi addr: \" + inet[0];\n\n// Get the 8th token (example: \"Bcast:192.168.0.255\")\n// and get the substring from character 7 to the end\nbcast = tokens[8].split(\" \", 1);\n//outString += \"\\n\" + \"Bcast: \" + bcast[0];\n\n// Get the 9th token (example: \"Mask:255.255.255.0\")\n// and get the substring from character 6 to the end\nmask = tokens[9].split(\" \", 1);\n//outString += \"\\n\" + \"Mask: \" + mask[0];\n\n// Don't send a message if the IF is the known default. Change to default ip.\nif (inet==DefaultIP) { \n//outString = \"\"; // set output to null if ip is the same so no message is sent\nreturn null;\n}else{\n// return the final output\nreturn {payload: outString};\n}\n",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 454,
+    "y": 80.5,
+    "wires": [
+      [
+        "45109320.96bfe4"
+      ]
+    ]
+  },
+  {
+    "id": "9ca7ffab.63a178",
+    "type": "http request",
+    "z": "997a73ba.66859",
+    "name": "To IFTTT (Pushbullet)",
+    "method": "PUT",
+    "ret": "txt",
+    "url": "https://maker.ifttt.com/trigger/rpi_post_ip/with/key/bFb4ITTo9WTmL6qYWfoqrw",
+    "x": 840,
+    "y": 80,
+    "wires": [
+      [
+        "34df68ab.cb2098"
+      ]
+    ]
+  },
+  {
+    "id": "45109320.96bfe4",
+    "type": "function",
+    "z": "997a73ba.66859",
+    "name": "Create JSON",
+    "func": "var ifttt = {};\n\nifttt.payload = {\n    \"value1\": msg.payload\n    // \"value2\": new Date()\n}\n\nreturn ifttt;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 649,
+    "y": 80,
+    "wires": [
+      [
+        "9ca7ffab.63a178"
+      ]
+    ]
+  },
+  {
+    "id": "a11c287c.5ee3d8",
+    "type": "function",
+    "z": "997a73ba.66859",
+    "name": "Create JSON",
+    "func": "var ifttt = {};\n\nifttt.payload = {\n    \"value1\": msg.payload\n    // \"value2\": new Date()\n}\n\nreturn ifttt;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 428,
+    "y": 204,
+    "wires": [
+      [
+        "2d8c6211.d2739e"
+      ]
+    ]
+  },
+  {
+    "id": "2d8c6211.d2739e",
+    "type": "http request",
+    "z": "997a73ba.66859",
+    "name": "To IFTTT (Drive)",
+    "method": "PUT",
+    "ret": "txt",
+    "url": "https://maker.ifttt.com/trigger/rpi_put_ip/with/key/bFb4ITTo9WTmL6qYWfoqrw",
+    "x": 614,
+    "y": 204,
+    "wires": [
+      [
+        "34df68ab.cb2098"
+      ]
+    ]
+  },
+  {
+    "id": "34df68ab.cb2098",
+    "type": "debug",
+    "z": "997a73ba.66859",
+    "name": "IFTTT Response",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 842,
+    "y": 204,
+    "wires": []
+  },
+  {
+    "id": "2ff573b8.d00a8c",
+    "type": "comment",
+    "z": "997a73ba.66859",
+    "name": "ifconfig full output",
+    "info": "https://docs.google.com/document/d/1tFh50PjZhWP4k5apo6xVKBTP9gJ34m28eigwLMNSejI/edit",
+    "x": 623,
+    "y": 261,
+    "wires": []
+  }
+]
