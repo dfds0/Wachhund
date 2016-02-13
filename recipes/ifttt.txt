@@ -1,0 +1,53 @@
+-- Storage the noise detection data
+If: Receive a web request (Maker)
+Than: Add row to spreadsheet (Drive)
+-
+  Objective: Storage the data of noise for use in the future
+-
+Trigger:
+  Event name: rpi_post_noise
+Action:
+  Spreadsheet name: {{EventName}}
+  Formatted row: {{OccurredAt}} ||| {{EventName}} ||| {{Value1}} |||{{Value2}} ||| {{Value3}}
+  Drive folder path: IFTTT/Maker/RPI_NoiseDetection
+
+
+-- Storage the output of ifconfig on Raspberry reboot
+If: Receive a web request (Maker)
+Than: Append to a document (Drive)
+-
+  Objective: Storage the full output of ifconfig command in a new document
+-
+Trigger:
+  Event name: rpi_put_ip
+Action:
+  Document name: {{OccurredAt}}
+  Content: {{Value1}}
+  Drive folder path: IFTTT/Maker/RPI_Ifconfig
+
+
+-- Create a notification with ip of Raspberry
+If: Receive a web request (Maker)
+Than: Push a note (PushBullet)
+-
+  Objective: Create a notification every time that the IP change
+-
+Trigger:
+  Event name: rpi_post_ip
+Action:
+  Title: {{EventName}}
+  Message: {{Value1}} - {{Value2}} - {{Value3}}
+
+
+-- Storage the temperature data
+If: Receive a web request (Maker)
+Than: Add row to spreadsheet (Drive)
+-
+  Objective: Storage the data of noise for use in the future
+-
+Trigger:
+  Event name: rpi_post_temperature
+Action:
+  Spreadsheet name: {{EventName}}
+  Formatted row: {{OccurredAt}} ||| {{EventName}} ||| {{Value1}} |||{{Value2}} ||| {{Value3}}
+  Drive folder path: IFTTT/Maker/RPI_Temperature
