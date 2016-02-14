@@ -61,7 +61,7 @@
     "name": "To IFTTT (Pushbullet)",
     "method": "PUT",
     "ret": "txt",
-    "url": "https://maker.ifttt.com/trigger/rpi_post_ip/with/key/bFb4ITTo9WTmL6qYWfoqrw",
+    "url": "https://maker.ifttt.com/trigger/rpi_post_ip/with/key/IFTTT_KEY",
     "x": 840,
     "y": 80,
     "wires": [
@@ -109,7 +109,7 @@
     "name": "To IFTTT (Drive)",
     "method": "PUT",
     "ret": "txt",
-    "url": "https://maker.ifttt.com/trigger/rpi_put_ip/with/key/bFb4ITTo9WTmL6qYWfoqrw",
+    "url": "https://maker.ifttt.com/trigger/rpi_put_ip/with/key/IFTTT_KEY",
     "x": 614,
     "y": 204,
     "wires": [
