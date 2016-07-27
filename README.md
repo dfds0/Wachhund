@@ -66,3 +66,8 @@ Hardware modules:
 <h4>Scripts (Ruby)</h4>
   - hund_horen.rb
   <br> Detects the presence of sound and do a get to "/noisedetection" - (Flow: On Noise, play song)
+
+===
+<h4>Dependência</h4>
+  Para o funcionamento correto do Wachhund é necessario fazer o node-red iniciar sempre que o raspberry for ligado
+  - Na sessão [Autostart on boot](http://nodered.org/docs/hardware/raspberrypi.html), você encontra instruções de como fazer.
