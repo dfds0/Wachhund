@@ -1,1 +1,254 @@
-[{"id":"1e08aac3.1279d5","type":"comment","z":"4576f650.4811a8","name":"About: Current folder","info":"/home/pi","x":396,"y":140,"wires":[]},{"id":"60d22f0a.1e066","type":"inject","z":"4576f650.4811a8","name":"Click to execute","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":true,"x":121,"y":153,"wires":[["35042b9b.2b6d54"]]},{"id":"35042b9b.2b6d54","type":"exec","z":"4576f650.4811a8","command":"cat /sys/bus/w1/devices/28-000002df2140/w1_slave","addpay":true,"append":"","useSpawn":"","name":"Action: get temperature","x":387,"y":194,"wires":[["b8956874.ffbdd8"],[],[]]},{"id":"784e3b3f.34f594","type":"comment","z":"4576f650.4811a8","name":"About: Get temperature","info":"cd /sys/bus/w1/devices\ncd 28-xxxxxxx (xxxxxx = id)\ncat w1_slave\n\n\nssh version: \nhttps://socomponents.co.uk/raspberry-pi-ds18b20-temperature-sensing/","x":395,"y":94,"wires":[]},{"id":"7b134572.07287c","type":"comment","z":"4576f650.4811a8","name":"About: Output","info":"Example of output:\n\n--\n6f 01 4b 46 7f ff 01 10 67 : crc=67 YES 6f \n01 4b 46 7f ff 01 10 67 t=22937\n--\n\nt=22937 // temperature is 22.937 °C\n","x":365,"y":51,"wires":[]},{"id":"b8956874.ffbdd8","type":"function","z":"4576f650.4811a8","name":"Parse: Message to temperature","func":"var temperature = msg.payload.split('t=')[1];\n// temperature = '23437\\n' \ntemperature = '23437\\n'; \nreturn temperature.substring(0,2);","outputs":1,"noerr":0,"x":695,"y":181,"wires":[["3f7fd5a5.5a6e6a"]]},{"id":"491db212.71e45c","type":"inject","z":"4576f650.4811a8","name":"Mon-Fri, 7h at 19h","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"0 7-18 * * 1,2,3,4,5","once":false,"x":125,"y":234,"wires":[["35042b9b.2b6d54"]]},{"id":"3f7fd5a5.5a6e6a","type":"function","z":"4576f650.4811a8","name":"Create Map","func":"var temperature = msg;\nmsg = {};\n\nvar date = new Date();\nvar day = date.getDate();\n\nmsg.mapa = {\n    \"temperature_sensor\": temperature + '°C',\n    \"current_day\": day\n}\nreturn msg;","outputs":1,"noerr":0,"x":685,"y":258,"wires":[["a92ea67f.6f9f98"]]},{"id":"c72177b7.22ac18","type":"switch","z":"4576f650.4811a8","name":"Switch sandbox","property":"mapa.current_day","propertyType":"msg","rules":[{"t":"lte","v":"15","vt":"str"},{"t":"gt","v":"15","vt":"str"}],"checkall":"true","outputs":2,"x":361,"y":498,"wires":[["63ee1349.3b6e6c"],["364d825d.25ec6e"]]},{"id":"63ee1349.3b6e6c","type":"http request","z":"4576f650.4811a8","name":"To Sandbox01","method":"POST","ret":"txt","url":"http://watchhund.getsandbox.com/weather","x":583,"y":446,"wires":[["6cff1b68.07ff84"]]},{"id":"6cff1b68.07ff84","type":"debug","z":"4576f650.4811a8","name":"Sandbox Response","active":true,"console":"false","complete":"payload","x":799,"y":495,"wires":[]},{"id":"364d825d.25ec6e","type":"http request","z":"4576f650.4811a8","name":"To Sandbox15","method":"POST","ret":"txt","url":"http://dbca-dbca.getsandbox.com/weather","x":582,"y":546,"wires":[["6cff1b68.07ff84"]]},{"id":"a92ea67f.6f9f98","type":"http request","z":"4576f650.4811a8","name":"Get Openweather","method":"GET","ret":"txt","url":"http://api.openweathermap.org/data/2.5/weather?id=3390760&units=metric&appid=d8dd707417b504ad263bfe70ec74e736","x":367,"y":338,"wires":[["cdad1932.f71438"]]},{"id":"d35f47cc.4fe868","type":"function","z":"4576f650.4811a8","name":"Create JSON","func":"\nvar temperature_open = msg.payload.main.temp;\nvar weatherIcon = msg.payload.weather[0].icon;\nvar code = weatherIcon.substring(0,2);\nvar icon = ':mostly_sunny:'; \n\n// Code 02 as default\nswitch (code) {\n    case '01':\n        icon = ':sunny:';\n        break;\n    case '03':\n        icon = ':barely_sunny:';\n        break;\n    case '04':\n        icon = ':cloud:';\n        break;\n    case '09':\n        icon = ':rain_cloud:';\n        break;\n    case '10':\n        icon = ':partly_sunny_rain:';\n        break;\n    case '11':\n        icon = ':thunder_cloud_and_rain:';\n        break;\n}\n\ntemperature_open = (temperature_open + '').substring(0,2);\n\nvar message = \"Zeppelin - Temperatura\";\nmessage += \"\\n Europa: \" + msg.mapa.temperature_sensor;\nmessage += \"\\n Recife: \" + temperature_open + '°C ' + icon; \nmessage += \"\\n\\n Atualizado a cada 5 minutos.\"\n\nmsg.payload = {\n \"text\" : message\n}\n\nreturn msg;","outputs":1,"noerr":0,"x":686,"y":337,"wires":[["c72177b7.22ac18"]]},{"id":"cdad1932.f71438","type":"json","z":"4576f650.4811a8","name":"","x":540,"y":338,"wires":[["d35f47cc.4fe868"]]}]
+[
+   {
+      "id":"1e08aac3.1279d5",
+      "type":"comment",
+      "z":"4576f650.4811a8",
+      "name":"About: Current folder",
+      "info":"/home/pi",
+      "x":396,
+      "y":140,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"60d22f0a.1e066",
+      "type":"inject",
+      "z":"4576f650.4811a8",
+      "name":"Click to execute",
+      "topic":"",
+      "payload":"",
+      "payloadType":"str",
+      "repeat":"",
+      "crontab":"",
+      "once":true,
+      "x":121,
+      "y":153,
+      "wires":[
+         [
+            "35042b9b.2b6d54"
+         ]
+      ]
+   },
+   {
+      "id":"35042b9b.2b6d54",
+      "type":"exec",
+      "z":"4576f650.4811a8",
+      "command":"cat /sys/bus/w1/devices/28-000002df2140/w1_slave",
+      "addpay":true,
+      "append":"",
+      "useSpawn":"",
+      "name":"Action: get temperature",
+      "x":387,
+      "y":194,
+      "wires":[
+         [
+            "b8956874.ffbdd8"
+         ],
+         [
+
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"784e3b3f.34f594",
+      "type":"comment",
+      "z":"4576f650.4811a8",
+      "name":"About: Get temperature",
+      "info":"cd /sys/bus/w1/devices\ncd 28-xxxxxxx (xxxxxx = id)\ncat w1_slave\n\n\nssh version: \nhttps://socomponents.co.uk/raspberry-pi-ds18b20-temperature-sensing/",
+      "x":395,
+      "y":94,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"7b134572.07287c",
+      "type":"comment",
+      "z":"4576f650.4811a8",
+      "name":"About: Output",
+      "info":"Example of output:\n\n--\n6f 01 4b 46 7f ff 01 10 67 : crc=67 YES 6f \n01 4b 46 7f ff 01 10 67 t=22937\n--\n\nt=22937 // temperature is 22.937 °C\n",
+      "x":365,
+      "y":51,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"b8956874.ffbdd8",
+      "type":"function",
+      "z":"4576f650.4811a8",
+      "name":"Parse: Message to temperature",
+      "func":"var temperature = msg.payload.split('t=')[1];\n// temperature = '23437\\n' \ntemperature = '23437\\n'; \nreturn temperature.substring(0,2);",
+      "outputs":1,
+      "noerr":0,
+      "x":695,
+      "y":181,
+      "wires":[
+         [
+            "3f7fd5a5.5a6e6a"
+         ]
+      ]
+   },
+   {
+      "id":"491db212.71e45c",
+      "type":"inject",
+      "z":"4576f650.4811a8",
+      "name":"Mon-Fri, 7h at 19h",
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "repeat":"",
+      "crontab":"0 7-18 * * 1,2,3,4,5",
+      "once":false,
+      "x":125,
+      "y":234,
+      "wires":[
+         [
+            "35042b9b.2b6d54"
+         ]
+      ]
+   },
+   {
+      "id":"3f7fd5a5.5a6e6a",
+      "type":"function",
+      "z":"4576f650.4811a8",
+      "name":"Create Map",
+      "func":"var temperature = msg;\nmsg = {};\n\nvar date = new Date();\nvar day = date.getDate();\n\nmsg.mapa = {\n    \"temperature_sensor\": temperature + '°C',\n    \"current_day\": day\n}\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":685,
+      "y":258,
+      "wires":[
+         [
+            "a92ea67f.6f9f98"
+         ]
+      ]
+   },
+   {
+      "id":"c72177b7.22ac18",
+      "type":"switch",
+      "z":"4576f650.4811a8",
+      "name":"Switch sandbox",
+      "property":"mapa.current_day",
+      "propertyType":"msg",
+      "rules":[
+         {
+            "t":"lte",
+            "v":"15",
+            "vt":"str"
+         },
+         {
+            "t":"gt",
+            "v":"15",
+            "vt":"str"
+         }
+      ],
+      "checkall":"true",
+      "outputs":2,
+      "x":361,
+      "y":498,
+      "wires":[
+         [
+            "63ee1349.3b6e6c"
+         ],
+         [
+            "364d825d.25ec6e"
+         ]
+      ]
+   },
+   {
+      "id":"63ee1349.3b6e6c",
+      "type":"http request",
+      "z":"4576f650.4811a8",
+      "name":"To Sandbox01",
+      "method":"POST",
+      "ret":"txt",
+      "url":"http://",
+      "x":583,
+      "y":446,
+      "wires":[
+         [
+            "6cff1b68.07ff84"
+         ]
+      ]
+   },
+   {
+      "id":"6cff1b68.07ff84",
+      "type":"debug",
+      "z":"4576f650.4811a8",
+      "name":"Sandbox Response",
+      "active":true,
+      "console":"false",
+      "complete":"payload",
+      "x":799,
+      "y":495,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"364d825d.25ec6e",
+      "type":"http request",
+      "z":"4576f650.4811a8",
+      "name":"To Sandbox15",
+      "method":"POST",
+      "ret":"txt",
+      "url":"http://",s
+      "x":582,
+      "y":546,s
+      "wires":[
+         [
+            "6cff1b68.07ff84"
+         ]
+      ]
+   },
+   {
+      "id":"a92ea67f.6f9f98",
+      "type":"http request",
+      "z":"4576f650.4811a8",
+      "name":"Get Openweather",
+      "method":"GET",
+      "ret":"txt",
+      "url":"http://api.openweathermap.org/data/2.5/weather?id=3390760&units=metric&appid=d8dd707417b504ad263bfe70ec74e736",
+      "x":367,
+      "y":338,
+      "wires":[
+         [
+            "cdad1932.f71438"
+         ]
+      ]
+   },
+   {
+      "id":"d35f47cc.4fe868",
+      "type":"function",
+      "z":"4576f650.4811a8",
+      "name":"Create JSON",
+      "func":"\nvar temperature_open = msg.payload.main.temp;\nvar weatherIcon = msg.payload.weather[0].icon;\nvar code = weatherIcon.substring(0,2);\nvar icon = ':mostly_sunny:'; \n\n// Code 02 as default\nswitch (code) {\n    case '01':\n        icon = ':sunny:';\n        break;\n    case '03':\n        icon = ':barely_sunny:';\n        break;\n    case '04':\n        icon = ':cloud:';\n        break;\n    case '09':\n        icon = ':rain_cloud:';\n        break;\n    case '10':\n        icon = ':partly_sunny_rain:';\n        break;\n    case '11':\n        icon = ':thunder_cloud_and_rain:';\n        break;\n}\n\ntemperature_open = (temperature_open + '').substring(0,2);\n\nvar message = \"Zeppelin - Temperatura\";\nmessage += \"\\n Europa: \" + msg.mapa.temperature_sensor;\nmessage += \"\\n Recife: \" + temperature_open + '°C ' + icon; \nmessage += \"\\n\\n Atualizado a cada 5 minutos.\"\n\nmsg.payload = {\n \"text\" : message\n}\n\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":686,
+      "y":337,
+      "wires":[
+         [
+            "c72177b7.22ac18"
+         ]
+      ]
+   },
+   {
+      "id":"cdad1932.f71438",
+      "type":"json",
+      "z":"4576f650.4811a8",
+      "name":"",
+      "x":540,
+      "y":338,
+      "wires":[
+         [
+            "d35f47cc.4fe868"
+         ]
+      ]
+   }
+]
