@@ -57,7 +57,7 @@ Sandbox.define('/rooms','POST', function(req, res) {
     res.status(200);
     rooms = req.body.rooms;
     res.json({
-        "text" : currentRoons
+        "text" : rooms
     });
     
     for(var key in rooms){
@@ -66,7 +66,26 @@ Sandbox.define('/rooms','POST', function(req, res) {
     
 })
 
+Sandbox.define('/schedule','POST', function(req, res) {
+    
+    res.type('application/json');
+    res.status(200);
+    
+    res.json({
+        "text" : loadEvents(req.body.text)
+    });
+    
+})
 
+function loadEvents(name) {
+    name = name.toLowerCase();
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    if (rooms[name] !== undefined) {
+        return 'Sala: *' + name + '* \n'+rooms[name].events;
+    } else {
+        return 'rooms.name.events';   
+    }
+}
 
 function loadScheduled(object) {
     object.scheduled = {};
@@ -111,5 +130,3 @@ function loadScheduled(object) {
     object.keyIndex = {};
 
 }
-
-
