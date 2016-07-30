@@ -79,9 +79,16 @@ Sandbox.define('/schedule','POST', function(req, res) {
 
 function loadEvents(name) {
     name = name.toLowerCase();
-    name = name.charAt(0).toUpperCase() + name.slice(1);
-    if (rooms[name] !== undefined) {
-        return 'Sala: *' + name + '* \n'+rooms[name].events;
+    
+    var roomName;
+    for(var key in rooms) {
+        if (key.toLowerCase().search(name) != -1) {
+            roomName = key;
+        }
+    }
+    
+    if (rooms[roomName] !== undefined) {
+        return 'Sala: *' + roomName + '* \n' + rooms[roomName].events;
     } else {
         return 'rooms.name.events';   
     }
@@ -96,7 +103,7 @@ function loadScheduled(object) {
 	    indexKey ++;
 	    for (var interval = 0; interval < 2; interval++) {
 		    indexKey ++;
-		    sufix = (interval == 0) ? ':00' : ':30';
+		    sufix = (interval === 0) ? ':00' : ':30';
             hour = ((''+hour).length == 1) ? '0'+hour : hour;
             object.indexKey[indexKey] = (hour + sufix);
             object.keyIndex[(hour + sufix)] = indexKey;
@@ -130,3 +137,5 @@ function loadScheduled(object) {
     object.keyIndex = {};
 
 }
+
+
