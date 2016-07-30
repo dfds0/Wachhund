@@ -1,56 +1,109 @@
-var values = msg.payload.split('&');
-var calendar = values[0].split('=')[1];
-var events = values[1].replace('events=', '');
+[
+   {
+      "id":"2ce9a17a.d80926",
+      "type":"http in",
+      "z":"b8d14ab6.fa7508",
+      "name":"On calendar update",
+      "url":"/test",
+      "method":"post",
+      "swaggerDoc":"",
+      "x":110,
+      "y":160,
+      "wires":[
+         [
+            "8e683f0a.b66c3",
+            "851c98ab.5818f"
+         ]
+      ]
+   },
+   {
+      "id":"8e683f0a.b66c3",
+      "type":"http response",
+      "z":"b8d14ab6.fa7508",
+      "name":"Reponse",
+      "x":340,
+      "y":60,
+      "wires":[
 
-if(context.global.rooms === undefined) {
-   context.global.rooms = {};
-}
+      ]
+   },
+   {
+      "id":"5a08793c.24edf8",
+      "type":"debug",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "active":true,
+      "console":"false",
+      "complete":"payload",
+      "x":530,
+      "y":160,
+      "wires":[
 
-var room = context.global.rooms[calendar];
+      ]
+   },
+   {
+      "id":"851c98ab.5818f",
+      "type":"function",
+      "z":"b8d14ab6.fa7508",
+      "name":"Create data",
+      "func":"",
+      "outputs":1,
+      "noerr":0,
+      "x":350,
+      "y":160,
+      "wires":[
+         [
+            "5a08793c.24edf8"
+         ]
+      ]
+   },
+   {
+      "id":"ce73b237.731da",
+      "type":"inject",
+      "z":"b8d14ab6.fa7508",
+      "name":"Click to execute",
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "repeat":"",
+      "crontab":"",
+      "once":false,
+      "x":120,
+      "y":240,
+      "wires":[
+         [
+            "9c145354.9968f8"
+         ]
+      ]
+   },
+   {
+      "id":"9c145354.9968f8",
+      "type":"function",
+      "z":"b8d14ab6.fa7508",
+      "name":"Load rooms",
+      "func":"\nmsg.payload = context.global.rooms;\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":350,
+      "y":240,
+      "wires":[
+         [
+            "543aca66.16d80c"
+         ]
+      ]
+   },
+   {
+      "id":"543aca66.16d80c",
+      "type":"debug",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "active":true,
+      "console":"false",
+      "complete":"false",
+      "x":530,
+      "y":240,
+      "wires":[
 
-if (room === undefined) {
-    room = {};
-    room['events'] = '';
-    room['lastUpdate'] = new Date();
-    
-    context.global.rooms[calendar] = room;
-}
-
-var params = '';
-var event = '';
-var host = '';
-var lines = events.split(',');
-
-room.events = '';
-for(var index in lines) {
-    params = lines[index].split('###');
-    event = params[0];
-    host = params[1].toLowerCase();
-    
-    if (host.search('Secret name') != -1) {
-        host = ' Secret user';
-    } else {
-        host = ' User';
-    }
-    
-    var hostArg = params[1].toLowerCase()
-    if (hostArg.search('daily') != -1) {
-        host += ', daily';
-
-    } else if (hostArg.search('sprint') != -1) {
-        host += ', sprint';
-
-    } else if (hostArg.search('review') != -1) {
-        host += ', review';
-        
-    } else if (hostArg.search('planning') != -1) {
-        host += ', planning';
-        
-    } else if (hostArg.search('meeting') != -1) {
-        host += ', meeting';
-    }
-    
-    room.events += event + '  -  ' + host + '\n';
-}
-
-return room.events;
+      ]
+   }
+]
