@@ -4,7 +4,7 @@
       "type":"http in",
       "z":"b8d14ab6.fa7508",
       "name":"On calendar update",
-      "url":"/test",
+      "url":"/room",
       "method":"post",
       "swaggerDoc":"",
       "x":110,
@@ -104,6 +104,484 @@
       "y":240,
       "wires":[
 
+      ]
+   },
+   {
+      "id":"b0b585f4.730598",
+      "type":"inject",
+      "z":"b8d14ab6.fa7508",
+      "name":"Mon-Fri, 7h at 19h",
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "repeat":"",
+      "crontab":"*/5 7-18 * * 1,2,3,4,5",
+      "once":false,
+      "x":130,
+      "y":360,
+      "wires":[
+         [
+            "f1472e74.75c72",
+            "8a6d4a67.a57578",
+            "5f2dafe2.f2fda8",
+            "bd70ec19.cb55a",
+            "ecdce0f6.f65fd8",
+            "542b1ce2.29dfe4",
+            "c07e4d67.a36b58"
+         ]
+      ]
+   },
+   {
+      "id":"f1472e74.75c72",
+      "type":"exec",
+      "z":"b8d14ab6.fa7508",
+      "command":"firefox imacros://run/?m=ariano.iim",
+      "addpay":false,
+      "append":"",
+      "useSpawn":"",
+      "name":"Update ariano",
+      "x":540,
+      "y":360,
+      "wires":[
+         [
+            "e3f54e6d.d4d2f"
+         ],
+         [
+
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"8a6d4a67.a57578",
+      "type":"delay",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "pauseType":"delay",
+      "timeout":"15",
+      "timeoutUnits":"seconds",
+      "rate":"1",
+      "rateUnits":"second",
+      "randomFirst":"1",
+      "randomLast":"5",
+      "randomUnits":"seconds",
+      "drop":false,
+      "x":330,
+      "y":420,
+      "wires":[
+         [
+            "b259e05d.98d038"
+         ]
+      ]
+   },
+   {
+      "id":"5f2dafe2.f2fda8",
+      "type":"delay",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "pauseType":"delay",
+      "timeout":"30",
+      "timeoutUnits":"seconds",
+      "rate":"1",
+      "rateUnits":"second",
+      "randomFirst":"1",
+      "randomLast":"5",
+      "randomUnits":"seconds",
+      "drop":false,
+      "x":330,
+      "y":480,
+      "wires":[
+         [
+            "e6378c9b.9d6838"
+         ]
+      ]
+   },
+   {
+      "id":"b259e05d.98d038",
+      "type":"exec",
+      "z":"b8d14ab6.fa7508",
+      "command":"firefox imacros://run/?m=tereza.iim",
+      "addpay":false,
+      "append":"",
+      "useSpawn":"",
+      "name":"Update tereza",
+      "x":540,
+      "y":420,
+      "wires":[
+         [
+            "e3f54e6d.d4d2f"
+         ],
+         [
+
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"e6378c9b.9d6838",
+      "type":"exec",
+      "z":"b8d14ab6.fa7508",
+      "command":"firefox imacros://run/?m=borges.iim",
+      "addpay":false,
+      "append":"",
+      "useSpawn":"",
+      "name":"Update borges",
+      "x":540,
+      "y":480,
+      "wires":[
+         [
+            "e3f54e6d.d4d2f"
+         ],
+         [
+
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"bd70ec19.cb55a",
+      "type":"delay",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "pauseType":"delay",
+      "timeout":"45",
+      "timeoutUnits":"seconds",
+      "rate":"1",
+      "rateUnits":"second",
+      "randomFirst":"1",
+      "randomLast":"5",
+      "randomUnits":"seconds",
+      "drop":false,
+      "x":330,
+      "y":540,
+      "wires":[
+         [
+            "44d372f.66e3a8c"
+         ]
+      ]
+   },
+   {
+      "id":"44d372f.66e3a8c",
+      "type":"exec",
+      "z":"b8d14ab6.fa7508",
+      "command":"firefox imacros://run/?m=domiguinhos.iim",
+      "addpay":false,
+      "append":"",
+      "useSpawn":"",
+      "name":"Update domigu.",
+      "x":540,
+      "y":540,
+      "wires":[
+         [
+            "e3f54e6d.d4d2f"
+         ],
+         [
+
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"ecdce0f6.f65fd8",
+      "type":"delay",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "pauseType":"delay",
+      "timeout":"60",
+      "timeoutUnits":"seconds",
+      "rate":"1",
+      "rateUnits":"second",
+      "randomFirst":"1",
+      "randomLast":"5",
+      "randomUnits":"seconds",
+      "drop":false,
+      "x":330,
+      "y":600,
+      "wires":[
+         [
+            "fbccce8b.46263"
+         ]
+      ]
+   },
+   {
+      "id":"fbccce8b.46263",
+      "type":"exec",
+      "z":"b8d14ab6.fa7508",
+      "command":"firefox imacros://run/?m=chico.iim",
+      "addpay":false,
+      "append":"",
+      "useSpawn":"",
+      "name":"Update chico s.",
+      "x":540,
+      "y":600,
+      "wires":[
+         [
+            "e3f54e6d.d4d2f"
+         ],
+         [
+
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"542b1ce2.29dfe4",
+      "type":"delay",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "pauseType":"delay",
+      "timeout":"75",
+      "timeoutUnits":"seconds",
+      "rate":"1",
+      "rateUnits":"second",
+      "randomFirst":"1",
+      "randomLast":"5",
+      "randomUnits":"seconds",
+      "drop":false,
+      "x":330,
+      "y":660,
+      "wires":[
+         [
+            "cae67f42.e11d88"
+         ]
+      ]
+   },
+   {
+      "id":"cae67f42.e11d88",
+      "type":"exec",
+      "z":"b8d14ab6.fa7508",
+      "command":"firefox imacros://run/?m=gonzaga.iim",
+      "addpay":false,
+      "append":"",
+      "useSpawn":"",
+      "name":"Update gonzag.",
+      "x":540,
+      "y":660,
+      "wires":[
+         [
+            "e3f54e6d.d4d2f"
+         ],
+         [
+
+         ],
+         [
+
+         ]
+      ]
+   },
+   {
+      "id":"e3f54e6d.d4d2f",
+      "type":"debug",
+      "z":"b8d14ab6.fa7508",
+      "name":"",
+      "active":true,
+      "console":"false",
+      "complete":"false",
+      "x":750,
+      "y":500,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"ac22aa57.38bcf",
+      "type":"switch",
+      "z":"b8d14ab6.fa7508",
+      "name":"Switch sandbox",
+      "property":"mapa.current_day",
+      "propertyType":"msg",
+      "rules":[
+         {
+            "t":"lte",
+            "v":"15",
+            "vt":"str"
+         },
+         {
+            "t":"gt",
+            "v":"15",
+            "vt":"str"
+         }
+      ],
+      "checkall":"true",
+      "outputs":2,
+      "x":360,
+      "y":820,
+      "wires":[
+         [
+            "796a6cc7.8989d4"
+         ],
+         [
+            "b9dfc50e.b41e9"
+         ]
+      ]
+   },
+   {
+      "id":"796a6cc7.8989d4",
+      "type":"http request",
+      "z":"b8d14ab6.fa7508",
+      "name":"To Sandbox01",
+      "method":"POST",
+      "ret":"txt",
+      "url":"http://watchhund.getsandbox.com/rooms",
+      "x":560,
+      "y":780,
+      "wires":[
+         [
+            "a4ee0eaa.8e6ae"
+         ]
+      ]
+   },
+   {
+      "id":"a4ee0eaa.8e6ae",
+      "type":"debug",
+      "z":"b8d14ab6.fa7508",
+      "name":"Sandbox Response",
+      "active":true,
+      "console":"false",
+      "complete":"payload",
+      "x":780,
+      "y":820,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"b9dfc50e.b41e9",
+      "type":"http request",
+      "z":"b8d14ab6.fa7508",
+      "name":"To Sandbox15",
+      "method":"POST",
+      "ret":"txt",
+      "url":"http://dbca-dbca.getsandbox.com/rooms",
+      "x":560,
+      "y":860,
+      "wires":[
+         [
+            "a4ee0eaa.8e6ae"
+         ]
+      ]
+   },
+   {
+      "id":"c07e4d67.a36b58",
+      "type":"function",
+      "z":"b8d14ab6.fa7508",
+      "name":"Create JSON",
+      "func":"msg.payload = {\n \"rooms\" : context.global.rooms\n}\n\nvar date = new Date();\nvar day = date.getDate();\n\nmsg.mapa = {\n    \"current_day\": day\n}\n\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":340,
+      "y":740,
+      "wires":[
+         [
+            "ac22aa57.38bcf"
+         ]
+      ]
+   },
+   {
+      "id":"ce1c2629.660348",
+      "type":"http in",
+      "z":"b8d14ab6.fa7508",
+      "name":"On calendar update",
+      "url":"/oceano-d",
+      "method":"get",
+      "swaggerDoc":"",
+      "x":770,
+      "y":60,
+      "wires":[
+         [
+            "3ecd97e3.e1b58"
+         ]
+      ]
+   },
+   {
+      "id":"3ecd97e3.e1b58",
+      "type":"function",
+      "z":"b8d14ab6.fa7508",
+      "name":"Load rooms",
+      "func":"msg.payload = context.global.rooms;\n\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":770,
+      "y":140,
+      "wires":[
+         [
+            "1d81bd5e.66891b"
+         ]
+      ]
+   },
+   {
+      "id":"1d81bd5e.66891b",
+      "type":"http response",
+      "z":"b8d14ab6.fa7508",
+      "name":"Reponse",
+      "x":760,
+      "y":220,
+      "wires":[
+
+      ]
+   },
+   {
+      "id":"777f9534.96feec",
+      "type":"inject",
+      "z":"b8d14ab6.fa7508",
+      "name":"Click to execute",
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "repeat":"",
+      "crontab":"",
+      "once":false,
+      "x":120,
+      "y":740,
+      "wires":[
+         [
+            "c07e4d67.a36b58"
+         ]
+      ]
+   },
+   {
+      "id":"62220543.e7b56c",
+      "type":"inject",
+      "z":"b8d14ab6.fa7508",
+      "name":"Click to execute",
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "repeat":"",
+      "crontab":"",
+      "once":false,
+      "x":120,
+      "y":880,
+      "wires":[
+         [
+            "741b5ff3.7d3b78"
+         ]
+      ]
+   },
+   {
+      "id":"741b5ff3.7d3b78",
+      "type":"function",
+      "z":"b8d14ab6.fa7508",
+      "name":"Reset rooms",
+      "func":"context.global.rooms = {};\nreturn msg;",
+      "outputs":1,
+      "noerr":0,
+      "x":330,
+      "y":880,
+      "wires":[
+         [
+
+         ]
       ]
    }
 ]
