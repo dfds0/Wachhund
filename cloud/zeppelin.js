@@ -82,12 +82,35 @@ Sandbox.define('/room','POST', function(req, res) {
     
 })
 
-function loadCalendars(hour){
-    var hour = (new Date()).getHours() + 1 ;
-    hour = ((''+hour).length == 1)? '0' + hour : hour;
+function loadCalendars(arg){
+    var hour = -1;
+    var min = -1;
     
-    var min = (new Date()).getMinutes();
-    min = (min < 30) ? '00' : '30';
+    // Se o parametro foi informado, tente converte
+    if (arg.search(':') != -1) {
+        hour = arg.split(':')[0];
+        min = arg.split(':')[1];
+         
+        hour = Number(hour);
+        min = Number(min);
+    }
+    
+    // Verifique o intervalo
+    hour = (hour >= 7 && hour <= 20) ? hour : undefined;
+    min = (min >= 00 && min <= 60) ? min : undefined;
+    
+    // Se tem algum erro no parametro, use o default
+    if (hour == undefined || min == undefined) {
+        hour = (new Date()).getHours() + 1;
+        min = (new Date()).getMinutes();
+    }
+    
+    if (hour > 20) {
+        return { "text" : "Horario invalido para o dia atual" }
+    }
+    
+    hour = ((''+hour).length == 1)? '0' + hour : hour;
+    min = (Number(min) < 30) ? '00' : '30';
     
     var key2;
     var key3;
@@ -101,35 +124,44 @@ function loadCalendars(hour){
     if(min == '00') {
         key2 = hour + ':30';
     } else {
-        key2 = (hour+1) + ':00';
+        key2 = hourPlus(hour, 1) + ':00';
     }
     key2 = (key2.length == 4) ? '0' + key2 : key2;
     
     // 09:00 | 09:30
     if(min == '00') {
-        key3 = (hour+1) + ':00';
+        key3 = hourPlus(hour, 1) + ':00';
     } else {
-        key3 = (hour+1) + ':30';
+        key3 = hourPlus(hour, 1) + ':30';
     }
     key3 = (key3.length == 4) ? '0' + key3 : key3;
     
     // 09:30 | 10:00
     if(min == '00') {
-        key4 = (hour+1) + ':30';
+        key4 = hourPlus(hour, 1) + ':30';
     } else {
-        key4 = (hour+2) + ':00';
+        key4 = hourPlus(hour, 1) + ':00';
     }
     key4 = (key4.length == 4) ? '0' + key4 : key4;
+    
+    // 10:00 | 10:30
+    if(min == '00') {
+        key5 = hourPlus(hour, 2) + ':00';
+    } else {
+        key5 = hourPlus(hour, 2) + ':30';
+    }
+    key5 = (key5.length == 4) ? '0' + key5 : key5;
+    
     
     var text = '';
     var line = '';
     var slash = ' | ';
     
     for(var key in state.rooms) {
-        line += getLink(key, key1);
-        line += slash + getLink(key, key2);
-        line += slash + getLink(key, key3);
-        line += slash + getLink(key, key4);
+        line += getLink(key, key1, key2);
+        line += slash + getLink(key, key2, key3);
+        line += slash + getLink(key, key3, key4);
+        line += slash + getLink(key, key4, key5);
         line += slash + key + '\n';
     }
     
@@ -138,11 +170,18 @@ function loadCalendars(hour){
     }
 }
 
-function getLink(key, time) {
+function hourPlus(hour, plus) {
+    hour = Number(hour) + plus;
+    return ((''+hour).length == 1) ? '0' + hour : hour;
+}
+
+function getLink(key, time, nextTime) {
     
     if (state.rooms[key].scheduled[time] === true) {
         return ('~' + time +'~');
     }
+    
+    var isHalfTime = (state.rooms[key].scheduled[nextTime] === true);
     
     var date = new Date();
     var dateParam = date.getFullYear();
@@ -152,7 +191,7 @@ function getLink(key, time) {
     
     //033000Z
     var hour = time.split(':')[0];
-    hour = ((++hour) + 2);
+    hour = (Number(hour) + 3);
     var nextHour = hour;
     hour = (('' + hour).length ==1) ? '0' + hour : hour;
     
@@ -160,11 +199,20 @@ function getLink(key, time) {
     var nextMin = min;
     
     if (min == '00') {
-        nextMin = '30';
+        // 08:00 -> 08:30 | 09:00
+        if(isHalfTime) {
+            nextMin = '30'; 
+        } else {
+            nextMin = min;
+            nextHour = hourPlus(nextHour, 1);
+        }
+        
     } else {
-        nextHour++;
-        nextMin = '00';
-        nextHour = (('' + nextHour).length ==1) ? '0' + nextHour : nextHour;    
+        // 08:30 -> 09:00 | 09:30
+        nextHour = hourPlus(nextHour, 1);
+        if (isHalfTime) {
+            nextMin = '00';
+        }
     }
     
     var firstDateParam = dateParam + hour + min + '00Z';
